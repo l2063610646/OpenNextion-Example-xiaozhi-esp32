@@ -46,7 +46,7 @@ def read_header(port, deadline):
         if version != 1 or header_size != HEADER_SIZE:
             window.clear()
             continue
-        if pixel_format != 2 or not width or not height or data_size != width * height * 2:
+        if pixel_format != 1 or not width or not height or data_size != width * height * 2:
             raise ValueError("invalid screenshot header")
         return width, height, data_size, crc32
     raise TimeoutError("no ONXS screenshot header received")
@@ -54,7 +54,7 @@ def read_header(port, deadline):
 
 def save_png(pixels, width, height, output):
     rgb = bytearray(width * height * 3)
-    for index, (pixel,) in enumerate(struct.iter_unpack(">H", pixels)):
+    for index, (pixel,) in enumerate(struct.iter_unpack("<H", pixels)):
         offset = index * 3
         rgb[offset] = ((pixel >> 11) & 0x1F) * 255 // 31
         rgb[offset + 1] = ((pixel >> 5) & 0x3F) * 255 // 63

@@ -19,7 +19,7 @@ constexpr char kTag[] = "UartSnapshot";
 struct __attribute__((packed)) SnapshotHeader {
     char magic[4];              // "ONXS"
     uint8_t version;            // 1
-    uint8_t pixel_format;       // 2 = RGB565 big-endian
+    uint8_t pixel_format;       // 1 = RGB565 little-endian
     uint16_t header_size;
     uint16_t width;
     uint16_t height;
@@ -82,7 +82,7 @@ void UartSnapshotService::SendSnapshot() {
     SnapshotHeader header{};
     std::memcpy(header.magic, "ONXS", sizeof(header.magic));
     header.version = 1;
-    header.pixel_format = 2;
+    header.pixel_format = 1;
     header.header_size = sizeof(SnapshotHeader);
     header.width = width;
     header.height = height;
