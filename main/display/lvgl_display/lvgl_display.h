@@ -11,6 +11,10 @@
 
 #include <string>
 #include <chrono>
+#include <cstdint>
+#include <vector>
+#include <cstdint>
+#include <vector>
 
 class LvglDisplay : public Display {
 public:
@@ -24,6 +28,7 @@ public:
     virtual void UpdateStatusBar(bool update_all = false);
     virtual void SetPowerSaveMode(bool on);
     virtual bool SnapshotToJpeg(std::string& jpeg_data, int quality = 80);
+    virtual bool SnapshotToRgb565(std::vector<uint8_t>& rgb565_data, uint16_t& width, uint16_t& height);
 
 protected:
     esp_pm_lock_handle_t pm_lock_ = nullptr;

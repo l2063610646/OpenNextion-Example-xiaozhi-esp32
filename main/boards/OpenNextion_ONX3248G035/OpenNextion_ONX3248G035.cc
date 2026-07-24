@@ -6,6 +6,7 @@
 #include "config.h"
 #include "i2c_device.h"
 #include "mcp_server.h"
+#include "uart_snapshot_service.h"
 
 #include <esp_log.h>
 #include <esp_lcd_panel_vendor.h>
@@ -280,6 +281,7 @@ private:
     LcdDisplay* display_;
     PCF8574* pcf8574_;
     CST826* cst826_;
+    UartSnapshotService* uart_snapshot_service_ = nullptr;
 
     void InitializeI2c() {
         // Initialize I2C peripheral
@@ -403,6 +405,7 @@ public:
         InitializeI2c();
         InitializeSpi();
         InitializeSt7789Display();
+        uart_snapshot_service_ = new UartSnapshotService(display_, SNAPSHOT_UART_RX_PIN, SNAPSHOT_UART_TX_PIN);
         InitializeButtons();
         InitializeTools();
         GetBacklight()->SetBrightness(100);

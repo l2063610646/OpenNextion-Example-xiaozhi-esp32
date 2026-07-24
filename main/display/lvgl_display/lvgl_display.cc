@@ -272,3 +272,23 @@ bool LvglDisplay::SnapshotToJpeg(std::string& jpeg_data, int quality) {
     return false;
 #endif
 }
+
+bool LvglDisplay::SnapshotToRgb565(std::vector<uint8_t>& rgb565_data, uint16_t& width, uint16_t& height) {
+#if CONFIG_LV_USE_SNAPSHOT
+    DisplayLockGuard lock(this);
+    lv_draw_buf_t* draw_buffer = lv_snapshot_take(lv_screen_active(), LV_COLOR_FORMAT_RGB565);
+    if (draw_buffer == nullptr) {
+        ESP_LOGE(TAG, "Failed to take RGB565 snapshot");
+        return false;
+    }
+    width = draw_buffer->header.w;
+    height = draw_buffer->header.h;
+    const uint8_t* data = static_cast<const uint8_t*>(draw_buffer->data);
+    rgb565_data.assign(data, data + draw_buffer->data_size);
+    lv_draw_buf_destroy(draw_buffer);
+    return true;
+#else
+    ESP_LOGE(TAG, "LV_USE_SNAPSHOT is not enabled");
+    return false;
+#endif
+}
